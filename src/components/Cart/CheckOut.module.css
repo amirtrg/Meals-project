@@ -14,12 +14,18 @@
 }
 
 .control input {
+  appearance: none;
+  -webkit-appearance: none;
   font: inherit;
-  border: 1px solid #ccc;
+  border: .09rem solid #ccc;
   border-radius: .5rem;
   padding: .5rem;
   width: 20rem;
   max-width: 100%;
+  outline: none;
+}
+.control input:focus{
+  border-color: #2657eb;
 }
 
 .actions {
