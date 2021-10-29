@@ -22,7 +22,7 @@ const Header = (props) => {
   return (
     <>
       <header className={classes.header}>
-        <h1 className={classes.brand}>meals</h1>
+        <h1 className={classes.brand}>royal</h1>
         <HeaderCartButton onClick={props.onShowCart} />
       </header>
 
