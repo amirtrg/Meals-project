@@ -13,7 +13,7 @@ const Cart = (props) => {
   const [isCheckout, setIsCheckout] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [didSubmit, setDidSubmit] = React.useState(false);
-  
+  const [submittingMassage, setSubmittingMassage] = React.useState("");
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
   const hasItem = cartCtx.items.length > 0;
@@ -41,25 +41,29 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
-  const submitOrderHandler =async (userData) => {
-    setIsSubmitting(true)
-   if(userData.length==0 , cartCtx.items.length<1 ){
-    return ;
-   }else{
-    await fetch(
-      "https://react-http-974d2-default-rtdb.firebaseio.com/orders.json",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          user: userData,
-          orderedItems: cartCtx.items,
-        }),
-      }
-    );
-   }
-    setIsSubmitting(false);
-   setDidSubmit(true)
-cartCtx.clearCart()
+  const submitOrderHandler = async (userData) => {
+    if (cartCtx.items.length > 0) {
+      setIsSubmitting(true);
+      await fetch(
+        "https://react-http-974d2-default-rtdb.firebaseio.com/orders.json",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            user: userData,
+            orderedItems: cartCtx.items,
+          }),
+        }
+      );
+      setIsSubmitting(false);
+      setDidSubmit(true);
+      setSubmittingMassage("successfully ordered sent ...");
+    } else {
+      setSubmittingMassage("you should choose something to order!");
+      setIsCheckout(false);
+      setDidSubmit(false);
+      return;
+    }
+    cartCtx.clearCart();
   };
 
   const cartItems = (
@@ -94,45 +98,38 @@ cartCtx.clearCart()
     </div>
   );
 
+  const cardModalContent = (
+    <>
+      {cartItems}
+      <div className={classes.total}>
+        <span>total amount</span>
+        <span className={totalAmountClasses}>{totalAmount}</span>
+      </div>
+      {isCheckout ? (
+        <Checkout onCancel={props.onHideCart} onConfirm={submitOrderHandler} />
+      ) : (
+        modalActions
+      )}
+    </>
+  );
 
-
-
-const cardModalContent =(
-  <>
-  {cartItems}
-  <div className={classes.total}>
-    <span>total amount</span>
-    <span className={totalAmountClasses}>{totalAmount}</span>
-  </div>
-  {isCheckout ? (
-    <Checkout onCancel={props.onHideCart} onConfirm={submitOrderHandler} />
-  ) : (
-    modalActions
-  )}
-  </>
-)
-
-const isSubmittingModalContent=<h3>sending order data ...</h3>
-
-const didSubmitModalContent=(
-  <>
-    <h3>successfully ordered sent ...</h3>
-    <div className={classes.actions}>
-      <Button
-        className={classes["button-alt"]}
-        onClick={props.onHideCart}
-      >
-        close
-      </Button>
-    </div>
-  </>
-)
-
+  const isSubmittingModalContent = <h3>sending order data ...</h3>;
+  const didSubmitModalContent = (
+    <>
+      <h3>{submittingMassage}</h3>
+      <div className={classes.actions}>
+        <Button className={classes["button-alt"]} onClick={props.onHideCart}>
+          close
+        </Button>
+      </div>
+    </>
+  );
 
   return (
     <Modal onClose={props.onHideCart}>
-      {!isSubmitting && !didSubmit && cardModalContent}
+      {!isSubmitting && !didSubmit && !submittingMassage && cardModalContent}
       {isSubmitting && isSubmittingModalContent}
+      {!didSubmit && submittingMassage && didSubmitModalContent}
       {didSubmit && didSubmitModalContent}
     </Modal>
   );
