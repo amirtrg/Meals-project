@@ -1,0 +1,73 @@
+.meals {
+    max-width: 60rem;
+    width: 90%;
+    margin: 2rem auto;
+    animation: meals-appear 1s ease-out forwards;
+  }
+  
+  .meals ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .button span svg{
+    fill: #fff;
+    width: 1rem;
+    height: 1rem;
+  }
+  .loading{
+    text-align: center;
+    color: #fff;
+    margin: 5rem;
+    position: relative;
+  }
+  .loading::after{
+    content: " ";
+    animation: dotted ease-in-out 700ms infinite alternate;
+    padding: 0 .25rem;
+    position: absolute;
+    color: #fff;
+  }
+  .error{
+    text-align: center;
+    color: rgb(160, 16, 16);
+    margin: 5rem;
+  }
+
+
+  @keyframes dotted {
+    0%{
+      content: " ";
+      
+    }
+    33.3%{
+      content: ".";
+    }
+    66.6%{
+      content: "..";
+      
+    }
+    100%{
+      content: "...";
+    }
+  }
+
+  
+   .button:hover,
+  .button:active {
+    background: linear-gradient(hsl(225, 83%, 40%),hsl(204, 66%, 20%));
+  }
+   .button:active{
+    outline-color: #2657eb;
+  }
+  @keyframes meals-appear {
+    from {
+      opacity: 0;
+      transform: translateY(3rem);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
